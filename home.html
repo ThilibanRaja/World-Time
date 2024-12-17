@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Time Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #78378a25;
+            color: #ece7e7;
+            text-align: center;
+        }
+        h1 {
+            color: #555;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .country {
+            background-color: #0e0e0e;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .country h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #e69408;
+        }
+        .time {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* India Time Styling */
+        .india {
+             /* Yellow background */
+            color: #f3ecec;  /* Red color for the country name */
+            width: 300px;  /* Increased width for India */
+            padding: 25px;  /* Increased padding */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);  /* Darker shadow */
+            border-radius: 10px;
+           margin-bottom: 20px;
+        }
+        .india h2 {
+            font-size: 30px;
+            font-family: serif;  /* Larger font size for India country name */
+            color: #07acf9;  /* Pink color for India name */
+        }
+        .india .time {
+            font-size: 20px;  /* Larger font size for India time */
+            color: #f7f6f6;  /* Purple color for time */
+            font-weight: bold;  /* Bold font for India time */
+        }
+    
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                justify-content: center;
+                padding: 10px;
+            }
+            .country {
+                width: 150px;
+            }
+            .india {
+                width: 250px;  /* Adjusted width for smaller screens */
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .country {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>World Time Display</h1>
+
+    <!-- Indian Time Section -->
+    <div class="container">
+        <div class="country india">
+            <h2>India</h2>
+            <div class="time" id="india-time"></div>
+        </div>
+    </div>
+
+    <!-- Remaining countries -->
+    <div class="container" id="time-container"></div>
+
+    <script>
+        // List of countries and their time zones
+        const countries = [
+            { name: "Andorra", timeZone: "Europe/Andorra" },
+            { name: "Australia", timeZone: "Australia/Sydney" },
+            { name: "Austria", timeZone: "Europe/Vienna" },
+            { name: "Belarus", timeZone: "Europe/Minsk" },
+            { name: "Belgium", timeZone: "Europe/Brussels" },
+            { name: "Brazil", timeZone: "America/Sao_Paulo" },
+            { name: "Bulgaria", timeZone: "Europe/Sofia" },
+            { name: "Canada", timeZone: "America/Toronto" },
+            { name: "China", timeZone: "Asia/Shanghai" },
+            { name: "Croatia", timeZone: "Europe/Zagreb" },
+            { name: "Czech Republic", timeZone: "Europe/Prague" },
+            { name: "Denmark", timeZone: "Europe/Copenhagen" },
+            { name: "Estonia", timeZone: "Europe/Tallinn" },
+            { name: "Finland", timeZone: "Europe/Helsinki" },
+            { name: "France", timeZone: "Europe/Paris" },
+            { name: "Germany", timeZone: "Europe/Berlin" },
+            { name: "Greece", timeZone: "Europe/Athens" },
+            { name: "Hungary", timeZone: "Europe/Budapest" },
+            { name: "Iceland", timeZone: "Atlantic/Reykjavik" },
+            { name: "Ireland", timeZone: "Europe/Dublin" },
+            { name: "Israel", timeZone: "Asia/Jerusalem" },
+            { name: "Italy", timeZone: "Europe/Rome" },
+            { name: "Japan", timeZone: "Asia/Tokyo" },
+            { name: "Latvia", timeZone: "Europe/Riga" },
+            { name: "Lithuania", timeZone: "Europe/Vilnius" },
+            { name: "Luxembourg", timeZone: "Europe/Luxembourg" },
+            { name: "Malta", timeZone: "Europe/Malta" },
+            { name: "Mexico", timeZone: "America/Mexico_City" },
+            { name: "Monaco", timeZone: "Europe/Monaco" },
+            { name: "Netherlands", timeZone: "Europe/Amsterdam" },
+            { name: "Norway", timeZone: "Europe/Oslo" },
+            { name: "Poland", timeZone: "Europe/Warsaw" },
+            { name: "Portugal", timeZone: "Europe/Lisbon" },
+            { name: "Romania", timeZone: "Europe/Bucharest" },
+            { name: "Saudi Arabia", timeZone: "Asia/Riyadh" },
+            { name: "Singapore", timeZone: "Asia/Singapore" },
+            { name: "Slovakia", timeZone: "Europe/Bratislava" },
+            { name: "Slovenia", timeZone: "Europe/Ljubljana" },
+            { name: "Spain", timeZone: "Europe/Madrid" },
+            { name: "Sweden", timeZone: "Europe/Stockholm" },
+            { name: "Switzerland", timeZone: "Europe/Zurich" },
+            { name: "UAE", timeZone: "Asia/Dubai" },
+            { name: "Ukraine", timeZone: "Europe/Kyiv" },
+            { name: "United Kingdom", timeZone: "Europe/London" },
+            { name: "USA", timeZone: "America/New_York" }
+        ];
+
+        // Function to create time and date display
+        function displayTimeAndDate() {
+            const container = document.getElementById("time-container");
+            container.innerHTML = ""; // Clear container
+            countries.forEach(country => {
+                const currentTime = new Date().toLocaleString("en-US", {
+                    timeZone: country.timeZone,
+                    hour12: true,
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric"
+                });
+
+                const currentDate = new Date().toLocaleDateString("en-US", {
+                    timeZone: country.timeZone,
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+
+                const countryDiv = document.createElement("div");
+                countryDiv.className = "country";
+                countryDiv.innerHTML = `  
+                    <h2>${country.name}</h2>
+                    <div class="time">${currentDate}<br>${currentTime}</div>
+                `;
+                container.appendChild(countryDiv);
+            });
+        }
+
+        // Function to display India time and date
+        function displayIndiaTimeAndDate() {
+            const indiaTimeElement = document.getElementById("india-time");
+            const indiaTime = new Date().toLocaleString("en-US", {
+                timeZone: "Asia/Kolkata",
+                hour12: true,
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric"
+            });
+
+            const indiaDate = new Date().toLocaleDateString("en-US", {
+                timeZone: "Asia/Kolkata",
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+
+            indiaTimeElement.innerHTML = `${indiaDate}<br>${indiaTime}`;
+        }
+
+        // Update time and date every second
+        displayTimeAndDate();
+        displayIndiaTimeAndDate();
+        setInterval(() => {
+            displayTimeAndDate();
+            displayIndiaTimeAndDate();
+        }, 1000);
+    </script>
+</body>
+</html>
